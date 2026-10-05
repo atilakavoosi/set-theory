@@ -1,0 +1,1162 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظریه مجموعه‌ها</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EFF6FF;--fg:#0F172A;--primary:#2563EB;--pri-dark:#1D4ED8;
+  --secondary:#F59E0B;--sec-dark:#D97706;--accent:#EC4899;
+  --surface:#FFFFFF;--surface2:#DBEAFE;--border:#93C5FD;
+  --ok:#10B981;--err:#EF4444;--r:18px;--rsm:10px;
+  --clay:4px 4px 0 var(--fg),inset 2px 2px 0 rgba(255,255,255,.55),inset -2px -2px 0 rgba(0,0,0,.07);
+  --clay-sm:3px 3px 0 var(--fg),inset 1px 1px 0 rgba(255,255,255,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:'Vazirmatn',Tahoma,sans-serif;line-height:1.8;direction:rtl}
+a{color:var(--primary);text-decoration:none}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--primary),#1E40AF);color:#fff;padding:64px 24px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'{}';position:absolute;font-size:350px;font-family:monospace;opacity:.06;top:-80px;left:-30px;pointer-events:none}
+.hero h1{font-size:clamp(1.8rem,5vw,3.2rem);font-weight:900;margin-bottom:12px;text-shadow:2px 2px 8px rgba(0,0,0,.3)}
+.hero p{font-size:1.05rem;opacity:.88;max-width:580px;margin:0 auto 28px}
+.hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.hbadge{background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);border-radius:30px;padding:6px 16px;font-size:.82rem;font-weight:700;backdrop-filter:blur(4px)}
+
+/* NAV */
+.snav{position:sticky;top:0;z-index:100;background:var(--fg);overflow-x:auto;scrollbar-width:none}
+.snav::-webkit-scrollbar{display:none}
+.snav-inner{display:inline-flex;padding:0 8px;min-width:100%}
+.nbtn{padding:13px 18px;background:transparent;border:none;color:rgba(255,255,255,.65);font-family:inherit;font-size:.8rem;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;font-weight:600}
+.nbtn:hover,.nbtn.act{color:#fff;border-bottom-color:var(--secondary)}
+
+/* MAIN */
+main{max-width:1000px;margin:0 auto;padding:40px 20px 100px}
+section{margin-bottom:80px;scroll-margin-top:55px}
+
+/* SECTION HEADER */
+.sh{display:flex;align-items:center;gap:16px;margin-bottom:32px}
+.snum{background:var(--primary);color:#fff;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;flex-shrink:0;box-shadow:3px 3px 0 var(--fg)}
+.sh h2{font-size:1.75rem;font-weight:900;color:var(--fg)}
+
+/* CARD */
+.card{background:var(--surface);border:3px solid var(--fg);border-radius:var(--r);padding:26px;margin-bottom:22px;box-shadow:var(--clay)}
+.card.blue{background:linear-gradient(135deg,#EFF6FF,#DBEAFE)}
+.card.yellow{background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border-color:var(--secondary);box-shadow:4px 4px 0 var(--secondary)}
+.card.green{background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border-color:var(--ok);box-shadow:4px 4px 0 var(--ok)}
+.card.red{background:linear-gradient(135deg,#FFF1F2,#FFE4E6);border-color:var(--err);box-shadow:4px 4px 0 var(--err)}
+.card.pink{background:linear-gradient(135deg,#FDF4FF,#FAE8FF);border-color:var(--accent);box-shadow:4px 4px 0 var(--accent)}
+.card h3{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:10px}
+.card h4{font-size:.95rem;font-weight:700;margin-bottom:6px}
+p+p{margin-top:10px}
+
+/* MATH */
+.mbox{background:var(--fg);color:#7DD3FC;font-family:'Courier New',monospace;font-size:1.1rem;padding:14px 20px;border-radius:var(--rsm);margin:14px 0;text-align:center;letter-spacing:.06em;direction:ltr}
+.mi{font-family:'Courier New',monospace;background:#E0E7FF;color:var(--primary);padding:1px 7px;border-radius:5px;font-size:.9em;direction:ltr;display:inline-block}
+
+/* RULE */
+.rule{border:4px solid var(--accent);border-radius:var(--r);padding:22px 26px;margin:22px 0;background:linear-gradient(135deg,#FDF2F8,#FCE7F3);box-shadow:5px 5px 0 var(--accent)}
+.rule h3{color:var(--accent);font-size:1.05rem;font-weight:700;margin-bottom:10px}
+
+/* ANALOGY */
+.analogy{border:3px solid var(--primary);border-radius:var(--r);padding:22px;margin:16px 0;background:var(--surface2);box-shadow:var(--clay-sm)}
+.analogy-icon{font-size:2.2rem;margin-bottom:10px}
+
+/* ALGO STEPS */
+.algo{list-style:none;counter-reset:a}
+.algo li{counter-increment:a;position:relative;padding:14px 14px 14px 54px;margin-bottom:10px;background:var(--surface);border:3px solid var(--fg);border-radius:var(--rsm);box-shadow:var(--clay-sm)}
+.algo li::before{content:counter(a);position:absolute;right:14px;top:50%;transform:translateY(-50%);background:var(--primary);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;box-shadow:2px 2px 0 var(--fg)}
+
+/* TABLE */
+.tw{overflow-x:auto;margin:18px 0}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{background:var(--primary);color:#fff;padding:11px 14px;text-align:right;font-weight:700}
+td{padding:10px 14px;border-bottom:2px solid var(--border);vertical-align:top}
+tr:nth-child(even) td{background:var(--surface2)}
+.sc{font-family:'Courier New',monospace;font-size:1.2rem;color:var(--primary);font-weight:700;direction:ltr;text-align:center}
+
+/* NESTED VIZ */
+.nviz{display:flex;justify-content:center;padding:24px;margin:18px 0;flex-wrap:wrap;gap:16px}
+.sbox{border:3px solid var(--primary);border-radius:14px;padding:14px 18px;position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;background:rgba(37,99,235,.06)}
+.sbox::before{content:attr(data-l);position:absolute;top:-11px;right:10px;background:var(--primary);color:#fff;font-size:.65rem;padding:2px 7px;border-radius:8px;font-family:monospace;font-weight:700}
+.selem{background:var(--secondary);color:var(--fg);padding:7px 13px;border-radius:8px;font-family:monospace;font-weight:700;border:2px solid var(--fg);box-shadow:2px 2px 0 var(--fg);font-size:.95rem}
+
+/* INTERACTIVE */
+.ilab{background:var(--fg);border-radius:var(--r);padding:26px;margin:22px 0;color:#E2E8F0}
+.ilab h3{color:var(--secondary);font-size:1.15rem;font-weight:700;margin-bottom:18px}
+.igrp{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.ifield{flex:1;min-width:180px;padding:10px 14px;border:3px solid #4B5563;border-radius:var(--rsm);background:#1F2937;color:#fff;font-family:'Courier New',monospace;font-size:.95rem;direction:ltr;transition:border-color .2s}
+.ifield:focus{outline:none;border-color:var(--primary)}
+.btn{padding:10px 22px;border:3px solid var(--fg);border-radius:var(--rsm);font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .15s;box-shadow:3px 3px 0 rgba(0,0,0,.3)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(0,0,0,.3)}
+.btn-p{background:var(--primary);color:#fff;border-color:var(--pri-dark)}
+.btn-s{background:var(--secondary);color:var(--fg);border-color:var(--sec-dark)}
+.btn-a{background:var(--accent);color:#fff;border-color:#BE185D}
+.btn-g{background:var(--ok);color:#fff;border-color:#059669}
+.rdisp{background:#111827;border:2px solid #374151;border-radius:var(--rsm);padding:14px 18px;font-family:'Courier New',monospace;font-size:.9rem;min-height:56px;direction:ltr;color:#10B981;margin-top:14px;white-space:pre-wrap;line-height:1.6}
+
+/* QUIZ */
+.qcard{background:var(--surface);border:3px solid var(--fg);border-radius:var(--r);padding:22px;margin-bottom:14px;box-shadow:var(--clay)}
+.qtext{font-size:1rem;font-weight:700;margin-bottom:14px;line-height:1.6}
+.qopts{display:grid;gap:8px}
+.qopt{padding:11px 18px;border:3px solid var(--border);border-radius:var(--rsm);cursor:pointer;transition:all .15s;background:var(--surface);font-family:inherit;font-size:.9rem;text-align:right;box-shadow:2px 2px 0 rgba(0,0,0,.08)}
+.qopt:hover:not([disabled]){border-color:var(--primary);background:var(--surface2)}
+.qopt.ok{background:#ECFDF5;border-color:var(--ok);box-shadow:3px 3px 0 var(--ok)}
+.qopt.no{background:#FFF1F2;border-color:var(--err);box-shadow:3px 3px 0 var(--err)}
+.qexp{margin-top:14px;padding:14px;background:var(--surface2);border-radius:var(--rsm);font-size:.88rem;border-right:4px solid var(--primary);display:none}
+.qexp.show{display:block}
+.qscore{background:var(--fg);color:var(--secondary);font-size:1.1rem;font-weight:700;text-align:center;padding:16px;border-radius:var(--rsm);margin-top:18px;display:none}
+
+/* PROGRESS */
+.prog{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;margin-bottom:16px;border:2px solid var(--border)}
+.progf{height:100%;background:var(--primary);border-radius:4px;transition:width .4s ease}
+
+/* CHEAT */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin:20px 0}
+.ccard{background:var(--surface);border:3px solid var(--fg);border-radius:var(--r);padding:18px;box-shadow:var(--clay-sm)}
+.ccard h4{color:var(--primary);font-size:1rem;font-weight:700;margin-bottom:10px;padding-bottom:7px;border-bottom:2px solid var(--border)}
+
+/* LEVEL BADGE */
+.lv{display:inline-block;padding:3px 11px;border-radius:20px;font-size:.75rem;font-weight:700;margin-right:6px}
+.lv1{background:#D1FAE5;color:#065F46}.lv2{background:#DBEAFE;color:#1E3A8A}
+.lv3{background:#FEF3C7;color:#78350F}.lv4{background:#FFE4E6;color:#881337}
+.lv5{background:#F3E8FF;color:#581C87}.lv6{background:#FEF9C3;color:#713F12;border:2px solid #CA8A04}
+
+/* TRAP */
+.trap{border:4px solid var(--err);border-radius:var(--r);padding:22px;margin-bottom:20px;background:linear-gradient(135deg,#FFF1F2,#FFE4E6);box-shadow:5px 5px 0 var(--err)}
+.trap h4{color:var(--err);font-weight:700;margin-bottom:10px;font-size:1rem}
+
+/* TRICK */
+.trick{background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:3px solid var(--secondary);border-radius:var(--rsm);padding:14px 18px;margin:12px 0;box-shadow:3px 3px 0 var(--secondary);font-size:.92rem}
+
+/* COMPARE */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+@media(max-width:600px){.cmp{grid-template-columns:1fr}.cgrid{grid-template-columns:1fr}}
+.cpanel{border:3px solid var(--fg);border-radius:var(--rsm);padding:18px;box-shadow:var(--clay-sm)}
+.cpanel.a{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border-color:var(--primary);box-shadow:3px 3px 0 var(--primary)}
+.cpanel.b{background:linear-gradient(135deg,#FFF7ED,#FFEDD5);border-color:var(--accent);box-shadow:3px 3px 0 var(--accent)}
+.cpanel h4{font-weight:700;margin-bottom:8px}
+
+/* SCAN */
+.scan-step{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+.seye{font-size:1.8rem;flex-shrink:0;line-height:1.2}
+.sc-cont h4{font-weight:700;color:var(--primary);margin-bottom:4px}
+
+/* DT */
+.dtree{background:var(--fg);color:#E2E8F0;border-radius:var(--r);padding:24px;margin:20px 0;font-family:'Courier New',monospace;font-size:.82rem;direction:ltr;overflow-x:auto;line-height:1.9}
+.dtq{color:#FCD34D}.dty{color:#6EE7B7}.dtn{color:#FCA5A5}.dta{color:#93C5FD;font-weight:700}
+
+/* SCROLL TOP */
+.stop{position:fixed;bottom:22px;left:22px;background:var(--primary);color:#fff;border:3px solid var(--fg);border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--clay-sm);font-size:1.2rem;opacity:0;pointer-events:none;transition:opacity .3s;z-index:200}
+.stop.show{opacity:1;pointer-events:auto}
+
+/* MISC */
+.hl-t{background:#ECFDF5;border:2px solid var(--ok);padding:1px 8px;border-radius:5px;color:#065F46;font-weight:700}
+.hl-f{background:#FFF1F2;border:2px solid var(--err);padding:1px 8px;border-radius:5px;color:#881337;font-weight:700}
+.psitems{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;direction:ltr}
+.psitem{background:var(--surface2);border:2px solid var(--primary);border-radius:7px;padding:4px 12px;font-family:monospace;font-size:.85rem;box-shadow:2px 2px 0 var(--primary)}
+ul.bullets{padding-right:20px;margin:8px 0}
+ul.bullets li{margin-bottom:6px}
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:700;margin:2px}
+.tag-b{background:var(--surface2);color:var(--primary);border:2px solid var(--primary)}
+.tag-y{background:#FEF3C7;color:#92400E;border:2px solid var(--secondary)}
+.tag-p{background:#FCE7F3;color:#BE185D;border:2px solid var(--accent)}
+.tag-g{background:#D1FAE5;color:#065F46;border:2px solid var(--ok)}
+.row-q{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin:8px 0}
+.divider{height:3px;background:linear-gradient(90deg,var(--primary),var(--accent),var(--secondary));border-radius:2px;margin:40px 0}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>🧮 نظریه مجموعه‌ها</h1>
+  <p>بازسازی کامل شهود ریاضی با یادگیری تعاملی</p>
+  <div class="hero-badges">
+    <span class="hbadge">۱۲ فصل جامع</span>
+    <span class="hbadge">آزمایشگاه تعاملی</span>
+    <span class="hbadge">آزمون هوشمند</span>
+    <span class="hbadge">برگه تقلب</span>
+    <span class="hbadge">تله‌های امتحانی</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="snav" id="snav">
+  <div class="snav-inner" id="navinner"></div>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════ PART 1 -->
+<section id="s1">
+<div class="sh"><div class="snum">۱</div><h2>مدل ذهنی — مجموعه چیست؟</h2></div>
+
+<p>قبل از هر تعریفی، بیایید در ذهن‌مان یک <strong>تصویر</strong> بسازیم. مجموعه‌ها همه جا هستند.</p>
+
+<div class="analogy">
+  <div class="analogy-icon">📦</div>
+  <h3>تشبیه اول: جعبه</h3>
+  <p>تصور کن یک جعبه کارتونی داری. داخل این جعبه می‌توانی <strong>هر چیزی</strong> بگذاری — توپ، کتاب، یا حتی جعبه‌ای دیگر!</p>
+  <p>این جعبه = یک مجموعه. هر چیزی که داخل جعبه است = عضو مجموعه.</p>
+  <div class="mbox">📦 { توپ، کتاب، ساعت }</div>
+  <p><strong>نکته کلیدی:</strong> جعبه <em>خودش</em> یک چیز است. محتویاتش چیزهای دیگری هستند. این تمایز بعداً خیلی مهم می‌شود!</p>
+</div>
+
+<div class="analogy">
+  <div class="analogy-icon">🏠</div>
+  <h3>تشبیه دوم: اتاق</h3>
+  <p>یک اتاق در نظر بگیر. داخل این اتاق چه کسانی هستند؟ علی، سارا، و رضا.</p>
+  <div class="mbox">اتاق = { علی، سارا، رضا }</div>
+  <p>سوال: آیا اتاق خودش یکی از آن سه نفر است؟ <strong>نه!</strong> اتاق <em>ظرف</em> است، نه محتوا. این دقیقاً همان اشتباهی است که در مجموعه‌ها خیلی‌ها مرتکب می‌شوند.</p>
+</div>
+
+<div class="analogy">
+  <div class="analogy-icon">📚</div>
+  <h3>تشبیه سوم: کتابخانه با قفسه‌ها</h3>
+  <p>یک کتابخانه دارد: قفسه ادبیات، قفسه علوم، قفسه تاریخ. هر قفسه هم یک مجموعه است. و <strong>خود کتابخانه</strong> هم یک مجموعه است که آن قفسه‌ها را در خود دارد!</p>
+  <div class="mbox">کتابخانه = { قفسه_ادبیات، قفسه_علوم، قفسه_تاریخ }</div>
+  <p>پس یک مجموعه می‌تواند شامل مجموعه‌های دیگر باشد. این همان <strong>مجموعه‌های تودرتو</strong> است!</p>
+</div>
+
+<div class="analogy">
+  <div class="analogy-icon">🪆</div>
+  <h3>تشبیه چهارم: عروسک‌های روسی (ماتریوشکا)</h3>
+  <p>عروسک‌های روسی را دیده‌ای؟ یک عروسک بزرگ را باز می‌کنی، داخلش یک عروسک کوچک‌تر است، آن را باز می‌کنی، عروسک کوچک‌تری است...</p>
+  <div class="nviz">
+    <div class="sbox" data-l="A = {">
+      <div class="sbox" data-l="B = {">
+        <div class="sbox" data-l="C = {">
+          <span class="selem">1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p>این یعنی: <span class="mi">{{{1}}}</span> — یک مجموعه که یک مجموعه را در بر دارد که خودش یک عدد را در بر دارد.</p>
+</div>
+
+<div class="card blue">
+  <h3>🎯 قانون بنیادی مجموعه‌ها</h3>
+  <ul class="bullets">
+    <li><strong>ترتیب مهم نیست:</strong> {۱,۲,۳} = {۳,۱,۲} = {۲,۳,۱}</li>
+    <li><strong>تکرار مهم نیست:</strong> {۱,۱,۲} = {۱,۲} — هر عضو فقط یک بار حساب می‌شود</li>
+    <li><strong>هر چیزی می‌تواند عضو باشد:</strong> اعداد، حروف، حتی مجموعه‌های دیگر</li>
+  </ul>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ PART 2 -->
+<section id="s2">
+<div class="sh"><div class="snum">۲</div><h2>عضو در مقابل زیرمجموعه</h2></div>
+
+<div class="card red">
+  <h3>⚠️ گیج‌کننده‌ترین مفهوم نظریه مجموعه‌ها</h3>
+  <p>بیشتر اشتباهات دانش‌آموزان از عدم تمایز بین این دو ناشی می‌شود. حالا آن را برای همیشه حل می‌کنیم.</p>
+</div>
+
+<div class="cmp">
+<div class="cpanel a">
+  <h4>∈ عضویت (Membership)</h4>
+  <p>یک <strong>عنصر تنها</strong> مستقیماً داخل مجموعه است.</p>
+  <div class="mbox">علی ∈ { علی، سارا، رضا }</div>
+  <p>علی <em>مستقیماً</em> داخل مجموعه نشسته است.</p>
+</div>
+<div class="cpanel b">
+  <h4>⊆ زیرمجموعه (Subset)</h4>
+  <p>یک <strong>مجموعه کامل</strong> درون مجموعه دیگری جا می‌گیرد.</p>
+  <div class="mbox">{علی، سارا} ⊆ { علی، سارا، رضا }</div>
+  <p>گروه علی و سارا به طور <em>کامل</em> داخل مجموعه است.</p>
+</div>
+</div>
+
+<div class="analogy">
+  <div class="analogy-icon">🏢</div>
+  <h4>تشبیه ساختمان اداری</h4>
+  <p>فرض کن یک ساختمان اداری داری با ۱۰ طبقه. هر طبقه چند اتاق دارد.</p>
+  <ul class="bullets">
+    <li><strong>عضویت (∈):</strong> «خانم احمدی در اتاق ۵ کار می‌کند.» — یک نفر مستقیماً در یک جا است</li>
+    <li><strong>زیرمجموعه (⊆):</strong> «واحد حسابداری بخشی از شرکت است.» — یک گروه کامل درون گروه بزرگ‌تری است</li>
+  </ul>
+</div>
+
+<div class="rule">
+  <h3>🔑 قانون طلایی یک‌بار برای همیشه</h3>
+  <p><strong>∈ می‌پرسد:</strong> «آیا این چیز مستقیماً و به تنهایی یکی از اجزای مجموعه است؟»</p>
+  <p style="margin-top:10px"><strong>⊆ می‌پرسد:</strong> «آیا هر عضو مجموعه‌ی اول، بدون استثنا، داخل مجموعه‌ی دوم هم هست؟»</p>
+</div>
+
+<div class="tw">
+<table>
+<tr><th>سوال</th><th>مجموعه A</th><th>مجموعه B</th><th>جواب</th><th>چرا؟</th></tr>
+<tr><td>آیا ۱ ∈ B؟</td><td>—</td><td>{۱,۲,۳}</td><td><span class="hl-t">بله</span></td><td>عدد ۱ مستقیماً عضو B است</td></tr>
+<tr><td>آیا {۱} ∈ B؟</td><td>—</td><td>{۱,۲,۳}</td><td><span class="hl-f">خیر</span></td><td>مجموعه {۱} داخل B نیست، فقط عدد ۱ است</td></tr>
+<tr><td>آیا {۱} ⊆ B؟</td><td>{۱}</td><td>{۱,۲,۳}</td><td><span class="hl-t">بله</span></td><td>عضو {۱} که همان ۱ است، داخل B هست</td></tr>
+<tr><td>آیا ۱ ⊆ B؟</td><td>—</td><td>{۱,۲,۳}</td><td>❓ اشتباه!</td><td>⊆ فقط بین مجموعه‌ها معنا دارد، نه اعداد</td></tr>
+</table>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ PART 3 -->
+<section id="s3">
+<div class="sh"><div class="snum">۳</div><h2>الگوریتم جهانی — چطور هر عبارتی را بخوانیم</h2></div>
+
+<p>وقتی با یک عبارت مجموعه‌ای پیچیده روبرو می‌شوی، این ۵ قدم را دنبال کن:</p>
+
+<ol class="algo">
+  <li><strong>آکولادهای بیرونی را پیدا کن:</strong> اول و آخر بزرگ‌ترین <span class="mi">{ }</span> کجاست؟ فقط داخل این‌ها نگاه کن.</li>
+  <li><strong>اعضای مستقیم را فهرست کن:</strong> کاماهایی که در عمق صفر هستند را پیدا کن. بین هر جفت کاما یک عضو مستقیم است.</li>
+  <li><strong>به داخل آکولادهای تودرتو نرو:</strong> وقتی به <span class="mi">{...}</span> رسیدی، آن را به عنوان یک شیء واحد تلقی کن.</li>
+  <li><strong>هدفت را با اعضای مستقیم مقایسه کن:</strong> آیا هدف دقیقاً با یکی از اعضای مستقیم برابر است؟</li>
+  <li><strong>نتیجه بگیر:</strong> اگر آری ← عضو است. اگر نه ← عضو نیست.</li>
+</ol>
+
+<div class="card yellow">
+  <h3>🔬 مثال گام‌به‌گام</h3>
+  <p>سوال: آیا <span class="mi">{1}</span> عضو <span class="mi">{{1}, 2, {3,4}}</span> است؟</p>
+  <div class="mbox">{{1}, 2, {3,4}}</div>
+  <p><strong>قدم ۱:</strong> آکولادهای بیرونی = ابتدا و انتها</p>
+  <p><strong>قدم ۲:</strong> اعضای مستقیم کدام‌اند؟ کاماها را در عمق صفر پیدا کن:</p>
+  <p style="direction:ltr;font-family:monospace;background:#111;color:#7dd3fc;padding:10px;border-radius:8px;margin:10px 0">
+  { [<span style="color:#fb923c">{1}</span>] , [<span style="color:#4ade80">2</span>] , [<span style="color:#a78bfa">{3,4}</span>] }
+  </p>
+  <p>سه عضو مستقیم: <span class="mi">{1}</span>، <span class="mi">2</span>، <span class="mi">{3,4}</span></p>
+  <p><strong>قدم ۳:</strong> وقتی به <span class="mi">{3,4}</span> رسیدیم، داخلش نرفتیم — یک شیء واحد است</p>
+  <p><strong>قدم ۴:</strong> هدف ما <span class="mi">{1}</span> است. آیا با یکی از سه عضو برابر است؟ بله! با عضو اول</p>
+  <p><strong>نتیجه:</strong> <span class="hl-t">{1} ∈ {{1}, 2, {3,4}} ✓</span></p>
+</div>
+
+<div class="ilab">
+  <h3>🧪 آزمایشگاه: بررسی عضویت</h3>
+  <p style="font-size:.85rem;opacity:.75;margin-bottom:14px">مجموعه را مثل: {1, {2,3}, 4} وارد کن. عضو را مثل: {2,3} وارد کن</p>
+  <div class="igrp">
+    <input class="ifield" id="mem-set" placeholder="مجموعه: مثلاً {1, {2,3}, 4}" value="{{1}, 2, {3,4}}">
+    <input class="ifield" id="mem-elem" placeholder="عضو: مثلاً {2,3}" value="{1}">
+  </div>
+  <div class="igrp">
+    <button class="btn btn-p" onclick="checkMembership()">بررسی عضویت ∈</button>
+    <button class="btn btn-s" onclick="checkSubset()">بررسی زیرمجموعه ⊆</button>
+  </div>
+  <div class="rdisp" id="mem-result">نتیجه اینجا نمایش داده می‌شود...</div>
+</div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ PART 4 -->
+<section id="s4">
+<div class="sh"><div class="snum">۴</div><h2>مجموعه‌های تودرتو — از ساده تا پیچیده</h2></div>
+
+<p>بیایید قدم‌به‌قدم پیش برویم. هیچ سطحی را نمی‌پریم.</p>
+
+<!-- Level 1 -->
+<div class="card green">
+  <h3>سطح ۱: ساده‌ترین مجموعه</h3>
+  <div class="mbox">{1, 2}</div>
+  <div class="nviz">
+    <div class="sbox" data-l="{1,2}">
+      <span class="selem">1</span>
+      <span class="selem">2</span>
+    </div>
+  </div>
+  <p>دو عضو مستقیم: عدد ۱ و عدد ۲. ساده.</p>
+  <p>تعداد اعضا: <strong>۲</strong> | اعضا: <strong>1, 2</strong></p>
+</div>
+
+<!-- Level 2 -->
+<div class="card blue">
+  <h3>سطح ۲: مجموعه‌ای که مجموعه دیگر را در بر دارد</h3>
+  <div class="mbox">{{1, 2}}</div>
+  <div class="nviz">
+    <div class="sbox" data-l="مجموعه بیرون">
+      <div class="sbox" data-l="{1,2}">
+        <span class="selem">1</span>
+        <span class="selem">2</span>
+      </div>
+    </div>
+  </div>
+  <p>فقط <strong>یک</strong> عضو مستقیم دارد: آن هم <span class="mi">{1,2}</span>.</p>
+  <p>خطای رایج: «دو عضو دارد: ۱ و ۲.» <span class="hl-f">اشتباه!</span> عدد ۱ و ۲ <em>مستقیماً</em> عضو نیستند!</p>
+  <div class="trick">یادت باشه: آکولادهای داخلی یک <em>جعبه</em> ایجاد می‌کنند. عددها درون آن جعبه‌اند، نه مستقیماً در مجموعه بیرونی.</div>
+</div>
+
+<!-- Level 3 -->
+<div class="card yellow">
+  <h3>سطح ۳: عضو تودرتو + عضو ساده</h3>
+  <div class="mbox">{{1}, 2}</div>
+  <div class="nviz">
+    <div class="sbox" data-l="مجموعه اصلی">
+      <div class="sbox" data-l="{1}">
+        <span class="selem">1</span>
+      </div>
+      <span class="selem">2</span>
+    </div>
+  </div>
+  <p>دو عضو مستقیم: <span class="mi">{1}</span> (یک مجموعه) و <span class="mi">2</span> (یک عدد)</p>
+  <p>آیا ۱ ∈ {{1},2}؟ <span class="hl-f">خیر!</span> ۱ داخل جعبه‌ی {1} است، نه مستقیماً اینجا</p>
+  <p>آیا {1} ∈ {{1},2}؟ <span class="hl-t">بله!</span> {1} مستقیماً عضو است</p>
+</div>
+
+<!-- Level 4 -->
+<div class="card pink">
+  <h3>سطح ۴: دو عضو مجموعه‌ای</h3>
+  <div class="mbox">{{1}, {2}}</div>
+  <div class="nviz">
+    <div class="sbox" data-l="مجموعه اصلی">
+      <div class="sbox" data-l="{1}">
+        <span class="selem">1</span>
+      </div>
+      <div class="sbox" data-l="{2}">
+        <span class="selem">2</span>
+      </div>
+    </div>
+  </div>
+  <p>دو عضو مستقیم: <span class="mi">{1}</span> و <span class="mi">{2}</span></p>
+  <p>آیا ۱ ∈ {{1},{2}}؟ <span class="hl-f">خیر!</span> | آیا {1} ∈ {{1},{2}}؟ <span class="hl-t">بله!</span></p>
+  <p>آیا {1,2} ∈ {{1},{2}}؟ <span class="hl-f">خیر!</span> {1,2} با {1} و {2} فرق دارد!</p>
+</div>
+
+<!-- Level 5 -->
+<div class="card red">
+  <h3>سطح ۵: سه لایه تودرتو</h3>
+  <div class="mbox">{{{1}}}</div>
+  <div class="nviz">
+    <div class="sbox" data-l="لایه ۱">
+      <div class="sbox" data-l="لایه ۲">
+        <div class="sbox" data-l="لایه ۳">
+          <span class="selem">1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p>یک عضو مستقیم: <span class="mi">{{1}}</span></p>
+  <p>آیا ۱ ∈ {{{1}}}؟ <span class="hl-f">خیر!</span> سه لایه فاصله دارد</p>
+  <p>آیا {1} ∈ {{{1}}}؟ <span class="hl-f">خیر!</span> {1} یک لایه داخل‌تر است</p>
+  <p>آیا {{1}} ∈ {{{1}}}؟ <span class="hl-t">بله!</span> {{1}} مستقیماً عضو است</p>
+</div>
+
+<!-- Level 6 - Mixed complex -->
+<div class="card" style="border-color:#7C3AED;box-shadow:4px 4px 0 #7C3AED;background:linear-gradient(135deg,#F5F3FF,#EDE9FE)">
+  <h3 style="color:#7C3AED">سطح ۶: مخلوط پیچیده</h3>
+  <div class="mbox">{1, {2,3}, {{4}}, ∅}</div>
+  <p>چهار عضو مستقیم:</p>
+  <ul class="bullets">
+    <li><span class="mi">1</span> — عدد ساده</li>
+    <li><span class="mi">{2,3}</span> — مجموعه‌ای با دو عضو</li>
+    <li><span class="mi">{{4}}</span> — مجموعه‌ای که خودش یک مجموعه است</li>
+    <li><span class="mi">∅</span> — مجموعه خالی</li>
+  </ul>
+  <p>آیا ۴ ∈ این مجموعه؟ <span class="hl-f">خیر!</span> (در دو لایه عمق است)</p>
+  <p>آیا {4} ∈ این مجموعه؟ <span class="hl-f">خیر!</span> ({{4}} عضو است، نه {4})</p>
+  <p>آیا {{4}} ∈ این مجموعه؟ <span class="hl-t">بله!</span></p>
+</div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ PART 5 -->
+<section id="s5">
+<div class="sh"><div class="snum">۵</div><h2>همه مفاهیم کلیدی</h2></div>
+
+<div class="card">
+  <h3>🔹 عضو (Element / Member)</h3>
+  <p><strong>تعریف:</strong> هر شیئی که مستقیماً داخل مجموعه قرار دارد.</p>
+  <p><strong>شهود بصری:</strong> تک‌چیزهایی که مستقیماً در جعبه هستند</p>
+  <div class="mbox">3 ∈ {1, 2, 3, 4}</div>
+  <p><strong>اشتباه رایج:</strong> فکر کردن که عددها درون مجموعه‌های تودرتو هم «عضو» مجموعه بیرونی هستند</p>
+  <div class="trick">ترفند: ∈ را مثل «در» بخوان. «۳ در {۱,۲,۳,۴} است؟» — مستقیماً داخل است؟ اگر بله، عضو است.</div>
+</div>
+
+<div class="card blue">
+  <h3>🔹 زیرمجموعه (Subset) ⊆</h3>
+  <p><strong>تعریف:</strong> A ⊆ B اگر هر عضو A، عضو B هم باشد</p>
+  <p><strong>شهود بصری:</strong> A کاملاً داخل B جا می‌شود</p>
+  <div class="mbox">{1,2} ⊆ {1,2,3,4}</div>
+  <p><strong>اشتباه رایج:</strong> فراموش کردن که هر مجموعه زیرمجموعه خودش است: A ⊆ A</p>
+  <div class="trick">ترفند: ⊆ را مثل «≤» بخوان. A ⊆ B یعنی A کوچک‌تر یا مساوی B است.</div>
+</div>
+
+<div class="card yellow">
+  <h3>🔹 زیرمجموعه سره (Proper Subset) ⊂</h3>
+  <p><strong>تعریف:</strong> A ⊂ B اگر A ⊆ B و A ≠ B</p>
+  <p><strong>شهود بصری:</strong> A داخل B است ولی با B برابر نیست (B حداقل یک عضو بیشتر دارد)</p>
+  <div class="mbox">{1,2} ⊂ {1,2,3}   ولی   {1,2,3} ⊄ {1,2,3}</div>
+  <p><strong>اشتباه رایج:</strong> استفاده از ⊂ وقتی دو مجموعه برابرند</p>
+  <div class="trick">ترفند: ⊂ را مثل «&lt;» بخوان. A ⊂ B یعنی A کوچک‌تر از B است (نه مساوی)</div>
+</div>
+
+<div class="card green">
+  <h3>🔹 مجموعه خالی (Empty Set) ∅ یا {}</h3>
+  <p><strong>تعریف:</strong> مجموعه‌ای که هیچ عضوی ندارد</p>
+  <p><strong>ویژگی شگفت‌انگیز:</strong> مجموعه خالی زیرمجموعه هر مجموعه‌ای است!</p>
+  <div class="mbox">∅ ⊆ {هر مجموعه‌ای}</div>
+  <p><strong>چرا؟</strong> برای اینکه هیچ عضوی نداری که ادعا کنی داخل مجموعه دیگر نیست!</p>
+  <div class="trick">ترفند: «نبود مخالف» یعنی قبول. ∅ هیچ مخالفی ندارد، پس در همه جا پذیرفته می‌شود.</div>
+  <p style="margin-top:10px"><strong>⚠️ مهم:</strong> ∅ ≠ {∅} — خالی بودن با داشتن عضوِ خالی فرق دارد!</p>
+</div>
+
+<div class="card pink">
+  <h3>🔹 مجموعه توانی (Power Set) P(A)</h3>
+  <p><strong>تعریف:</strong> مجموعه‌ای که شامل تمام زیرمجموعه‌های A است</p>
+  <div class="mbox">P({a,b}) = { ∅, {a}, {b}, {a,b} }</div>
+  <p><strong>تعداد اعضا:</strong> اگر A دارای n عضو باشد، P(A) دارای ۲ⁿ عضو است</p>
+  <p>P({a,b,c}): ۲³ = ۸ عضو | P(∅): ۲⁰ = ۱ عضو (فقط {∅})</p>
+  <div class="trick">ترفند: به ازای هر عضو، دو انتخاب داری: داخل باشد یا نباشد. n عضو → ۲ⁿ زیرمجموعه.</div>
+</div>
+
+<div class="card blue">
+  <h3>🔹 مجموعه تکایی (Singleton)</h3>
+  <p><strong>تعریف:</strong> مجموعه‌ای با دقیقاً یک عضو</p>
+  <div class="mbox">{5}   یا   {∅}   یا   {{1,2}}</div>
+  <p><strong>اشتباه رایج:</strong> فکر کردن {5} و 5 یکی هستند — نیستند! {5} جعبه‌ای است با عدد 5 داخلش</p>
+  <div class="trick">ترفند: {5} را مثل «جعبه‌ای که فقط عدد 5 توشه» تصور کن. خود 5 عضو است، جعبه نیست.</div>
+</div>
+
+<div class="card">
+  <h3>🔹 مجموعه جهانی (Universal Set) U</h3>
+  <p><strong>تعریف:</strong> مجموعه‌ای که همه اشیاء مورد بحث را در بر می‌گیرد</p>
+  <p>بستگی به موضوع دارد. در یک مساله ممکن است U = {اعداد صحیح} باشد، در مساله دیگری U = {دانش‌آموزان کلاس}</p>
+</div>
+
+<div class="ilab">
+  <h3>🧪 کاوشگر مجموعه توانی</h3>
+  <p style="font-size:.85rem;opacity:.75;margin-bottom:14px">یک مجموعه ساده وارد کن (مثلاً: a,b,c — حداکثر ۴ عضو)</p>
+  <div class="igrp">
+    <input class="ifield" id="ps-input" placeholder="اعضا را با کاما جدا کن: a,b,c" value="a,b">
+    <button class="btn btn-a" onclick="generatePowerSet()">نمایش مجموعه توانی</button>
+  </div>
+  <div class="rdisp" id="ps-result">مجموعه توانی اینجا نمایش داده می‌شود...</div>
+  <div class="psitems" id="ps-grid"></div>
+</div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ PART 6 -->
+<section id="s6">
+<div class="sh"><div class="snum">۶</div><h2>همه نمادها — کامل و دقیق</h2></div>
+
+<div class="tw">
+<table>
+<tr><th>نماد</th><th>نام</th><th>معنی</th><th>مثال درست</th><th>مثال اشتباه رایج</th></tr>
+<tr>
+  <td class="sc">∈</td>
+  <td>عضو است</td>
+  <td>x ∈ A: x مستقیماً در A است</td>
+  <td>2 ∈ {1,2,3}</td>
+  <td>{2} ∈ {1,2,3} ← اشتباه</td>
+</tr>
+<tr>
+  <td class="sc">∉</td>
+  <td>عضو نیست</td>
+  <td>x ∉ A: x در A نیست</td>
+  <td>4 ∉ {1,2,3}</td>
+  <td>این نماد را جای ⊄ نگذار</td>
+</tr>
+<tr>
+  <td class="sc">⊆</td>
+  <td>زیرمجموعه</td>
+  <td>A⊆B: هر عضو A در B هم هست</td>
+  <td>{1}⊆{1,2,3}</td>
+  <td>1⊆{1,2,3} ← ۱ مجموعه نیست</td>
+</tr>
+<tr>
+  <td class="sc">⊂</td>
+  <td>زیرمجموعه سره</td>
+  <td>A⊂B: A⊆B و A≠B</td>
+  <td>{1}⊂{1,2}</td>
+  <td>{1,2}⊂{1,2} ← برابرند</td>
+</tr>
+<tr>
+  <td class="sc">⊄</td>
+  <td>زیرمجموعه نیست</td>
+  <td>A⊄B: حداقل یک عضو A در B نیست</td>
+  <td>{1,5}⊄{1,2,3}</td>
+  <td>⊄ برای اعداد استفاده نکن</td>
+</tr>
+<tr>
+  <td class="sc">⊈</td>
+  <td>زیرمجموعه سره نیست</td>
+  <td>A⊈B: یا A برابر B نیست، یا A زیرمجموعه نیست</td>
+  <td>{1,2}⊈{1,2}</td>
+  <td>با ⊄ اشتباه نگیر</td>
+</tr>
+<tr>
+  <td class="sc">=</td>
+  <td>تساوی مجموعه</td>
+  <td>A=B: A⊆B و B⊆A</td>
+  <td>{1,2}={2,1}</td>
+  <td>{1,2}={1,2,2} ← درست! (تکرار مهم نیست)</td>
+</tr>
+<tr>
+  <td class="sc">∅ {}</td>
+  <td>مجموعه خالی</td>
+  <td>مجموعه‌ای بدون عضو</td>
+  <td>∅ ⊆ A (همیشه)</td>
+  <td>∅ = {∅} ← اشتباه!</td>
+</tr>
+</table>
+</div>
+
+<div class="card red">
+  <h3>⚠️ تله نمادها</h3>
+  <ul class="bullets">
+    <li><strong>{∅} ≠ ∅</strong> — {∅} یک عضو دارد (خودِ مجموعه خالی)، ∅ هیچ عضوی ندارد</li>
+    <li><strong>∈ vs ⊆:</strong> ∈ برای عضو، ⊆ برای مجموعه. ۱ ∈ A، ولی {۱} ⊆ A</li>
+    <li><strong>⊂ vs ⊆:</strong> ⊂ سره‌تر است. A ⊆ A ولی A ⊄ A</li>
+  </ul>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ PART 7 -->
+<section id="s7">
+<div class="sh"><div class="snum">۷</div><h2>موقعیت‌های گیج‌کننده</h2></div>
+
+<div class="cmp">
+<div class="cpanel a">
+  <h4>∅ (مجموعه خالی)</h4>
+  <p>صفر عضو دارد</p>
+  <div class="nviz"><div class="sbox" data-l="∅"></div></div>
+  <p>∅ ⊆ هر چیزی ✓</p>
+  <p>∅ ∈ {∅} ✓</p>
+</div>
+<div class="cpanel b">
+  <h4>{∅} (مجموعه‌ای که خالی را دارد)</h4>
+  <p>یک عضو دارد: خودِ ∅</p>
+  <div class="nviz"><div class="sbox" data-l="{∅}"><span class="selem">∅</span></div></div>
+  <p>{∅} ⊆ {∅} ✓</p>
+  <p>∅ ∈ {∅} ✓</p>
+</div>
+</div>
+
+<div class="cmp">
+<div class="cpanel a">
+  <h4>{1} عضو</h4>
+  <p>وقتی {1} ∈ A است، {1} به عنوان یک شیء واحد داخل A است</p>
+  <div class="mbox">{1} ∈ {{1}, 2}</div>
+</div>
+<div class="cpanel b">
+  <h4>{1} زیرمجموعه</h4>
+  <p>وقتی {1} ⊆ A است، یعنی عضو {1} که همان 1 است، در A هم هست</p>
+  <div class="mbox">{1} ⊆ {1, 2, 3}</div>
+</div>
+</div>
+
+<div class="card yellow">
+  <h3>آیا چیزی می‌تواند هم عضو و هم زیرمجموعه باشد؟</h3>
+  <p>بله! مثلاً در <span class="mi">A = {{1}, 1, 2}</span>:</p>
+  <ul class="bullets">
+    <li>{1} ∈ A ← بله (مستقیماً عضو است)</li>
+    <li>{1} ⊆ A ← بله (چون 1 ∈ A)</li>
+  </ul>
+  <p>پس {1} هم عضو A است و هم زیرمجموعه A!</p>
+</div>
+
+<div class="tw"><table>
+<tr><th>سوال</th><th>جواب</th><th>توضیح</th></tr>
+<tr><td>آیا ∅ ∈ {∅}؟</td><td><span class="hl-t">بله</span></td><td>∅ دقیقاً عضو {∅} است</td></tr>
+<tr><td>آیا ∅ ⊆ {∅}؟</td><td><span class="hl-t">بله</span></td><td>∅ زیرمجموعه هر مجموعه‌ای است</td></tr>
+<tr><td>آیا {∅} ⊆ {∅}؟</td><td><span class="hl-t">بله</span></td><td>هر مجموعه زیرمجموعه خودش است</td></tr>
+<tr><td>آیا ∅ ∈ ∅؟</td><td><span class="hl-f">خیر</span></td><td>∅ هیچ عضوی ندارد</td></tr>
+<tr><td>آیا ∅ ⊆ ∅؟</td><td><span class="hl-t">بله</span></td><td>∅ زیرمجموعه خودش هم هست</td></tr>
+<tr><td>آیا 1 ∈ {{1}}؟</td><td><span class="hl-f">خیر</span></td><td>عدد 1 یک لایه داخل‌تر است</td></tr>
+<tr><td>آیا {1} ∈ {{1}}؟</td><td><span class="hl-t">بله</span></td><td>{1} مستقیماً عضو {{1}} است</td></tr>
+<tr><td>آیا {{1}} ∈ {{{1}}}؟</td><td><span class="hl-t">بله</span></td><td>{{1}} مستقیماً عضو {{{1}}} است</td></tr>
+</table></div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ PART 8 -->
+<section id="s8">
+<div class="sh"><div class="snum">۸</div><h2>تمرین‌های سطح‌بندی شده</h2></div>
+
+<div class="card green"><h3><span class="lv lv1">سطح ۱</span> خیلی آسان</h3>
+<p><strong>۱.</strong> آیا ۵ ∈ {۳,۴,۵,۶}؟ → <span class="hl-t">بله</span> — ۵ مستقیماً عضو است</p>
+<p><strong>۲.</strong> آیا ۷ ∈ {۱,۲,۳}؟ → <span class="hl-f">خیر</span> — ۷ در لیست نیست</p>
+<p><strong>۳.</strong> آیا {a} ⊆ {a,b,c}؟ → <span class="hl-t">بله</span> — a عضو {a,b,c} است</p>
+<p><strong>۴.</strong> آیا {a,b,c} = {c,b,a}؟ → <span class="hl-t">بله</span> — ترتیب مهم نیست</p>
+</div>
+
+<div class="card blue"><h3><span class="lv lv2">سطح ۲</span> آسان</h3>
+<p><strong>۱.</strong> آیا {۱} ∈ {۱,۲,۳}؟ → <span class="hl-f">خیر</span> — {۱} مجموعه است، ولی داخل {۱,۲,۳} فقط عدد ۱ هست نه مجموعه {۱}</p>
+<p><strong>۲.</strong> آیا {۱,۲} ⊆ {۱,۲,۳,۴}؟ → <span class="hl-t">بله</span> — هر دو عضو (۱ و ۲) در مجموعه دوم هستند</p>
+<p><strong>۳.</strong> آیا ∅ ⊆ {۱,۲,۳}؟ → <span class="hl-t">بله</span> — ∅ زیرمجموعه هر مجموعه‌ای است</p>
+<p><strong>۴.</strong> چند عضو دارد {∅,{∅}}؟ → <strong>۲ عضو</strong>: ∅ و {∅}</p>
+</div>
+
+<div class="card yellow"><h3><span class="lv lv3">سطح ۳</span> متوسط</h3>
+<p><strong>۱.</strong> آیا {۱} ∈ {{۱},۲}؟ → <span class="hl-t">بله</span> — {۱} مستقیماً عضو {{۱},۲} است</p>
+<p><strong>۲.</strong> آیا ۱ ∈ {{۱},۲}؟ → <span class="hl-f">خیر</span> — ۱ داخل جعبه {۱} است</p>
+<p><strong>۳.</strong> آیا {۱,۲} ∈ {{۱},{۲}}؟ → <span class="hl-f">خیر</span> — {۱,۲} یک چیز است، اعضای {{۱},{۲}} دو چیز مجزا هستند ({۱} و {۲})</p>
+<p><strong>۴.</strong> |P({۱,۲,۳})| = ؟ → <strong>۸</strong> (= ۲³)</p>
+</div>
+
+<div class="card red"><h3><span class="lv lv4">سطح ۴</span> سخت</h3>
+<p><strong>۱.</strong> آیا {{۱}} ∈ {{{۱}}}؟ → <span class="hl-t">بله</span> — {{۱}} یک سطح پایین‌تر از {{{۱}}} است</p>
+<p><strong>۲.</strong> آیا ∅ ∈ P(A) برای هر A؟ → <span class="hl-t">بله</span> — ∅ همیشه یک زیرمجموعه است، پس عضو P(A) است</p>
+<p><strong>۳.</strong> اگر A ∈ B و B ⊆ C، آیا A ∈ C؟ → <span class="hl-t">بله</span> — A عضو B است، B زیرمجموعه C است، پس A عضو C است</p>
+<p><strong>۴.</strong> چند عضو دارد P(P(∅))؟ → P(∅)={∅}، پس P(P(∅))=P({∅})={∅,{∅}} → <strong>۲ عضو</strong></p>
+</div>
+
+<div class="card pink"><h3><span class="lv lv5">سطح ۵</span> اولمپیاد</h3>
+<p><strong>۱.</strong> اگر A = {A}، آیا A ∈ A؟ → این یک مجموعه خود-عضو است (مفهوم پارادوکس) — در نظریه استاندارد ZFC این مجموعه وجود ندارد</p>
+<p><strong>۲.</strong> اگر A ⊆ B و B ⊆ A، پس A = B. اثبات کن: اگر x ∈ A → x ∈ B (از A⊆B) و x ∈ B → x ∈ A (از B⊆A). پس A = B</p>
+<p><strong>۳.</strong> |P(P(P(∅)))| = ؟ → P(∅)={∅}: ۱ عضو → P(P(∅))={∅,{∅}}: ۲ عضو → P(P(P(∅))): ۴ عضو</p>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ PART 9 -->
+<section id="s9">
+<div class="sh"><div class="snum">۹</div><h2>تله‌های امتحانی — سوالات فریبکار</h2></div>
+
+<div class="trap">
+  <h4>🪤 تله ۱: {∅} چند عضو دارد؟</h4>
+  <p><strong>جواب اشتباه رایج:</strong> «صفر، چون خالی است!»</p>
+  <p><strong>جواب درست:</strong> <span class="hl-t">یک</span> — {∅} مجموعه‌ای است که عضوش مجموعه خالی است. جعبه‌ای که یک جعبه خالی توشه، خودش خالی نیست!</p>
+</div>
+
+<div class="trap">
+  <h4>🪤 تله ۲: آیا {1,2} ∈ {{1,2}}؟</h4>
+  <p><strong>جواب اشتباه:</strong> «خیر، چون {1,2} زیرمجموعه است نه عضو»</p>
+  <p><strong>جواب درست:</strong> <span class="hl-t">بله!</span> {{1,2}} یک مجموعه با یک عضو است: خودِ {1,2}. پس {1,2} مستقیماً عضو {{1,2}} است.</p>
+</div>
+
+<div class="trap">
+  <h4>🪤 تله ۳: آیا {1,2} = {{1},{2}}؟</h4>
+  <p><strong>جواب اشتباه:</strong> «بله، هر دو شامل 1 و 2 هستند»</p>
+  <p><strong>جواب درست:</strong> <span class="hl-f">خیر!</span> {1,2} اعضایش ۱ و ۲ (اعداد) هستند. {{1},{2}} اعضایش {1} و {2} (مجموعه‌ها) هستند.</p>
+</div>
+
+<div class="trap">
+  <h4>🪤 تله ۴: آیا ∅ = {}؟</h4>
+  <p><strong>جواب درست:</strong> <span class="hl-t">بله!</span> ∅ و {} دو نماد برای یک چیز یکسان هستند.</p>
+</div>
+
+<div class="trap">
+  <h4>🪤 تله ۵: آیا A ⊂ A؟</h4>
+  <p><strong>جواب اشتباه:</strong> «بله، هر مجموعه زیرمجموعه خودش است»</p>
+  <p><strong>جواب درست:</strong> <span class="hl-f">خیر!</span> A ⊆ A درست است. ولی ⊂ (سره) یعنی نابرابر. A با خودش برابر است، پس A ⊄ A (به معنای سره)</p>
+</div>
+
+<div class="trap">
+  <h4>🪤 تله ۶: مجموعه توانی ∅ چیست؟</h4>
+  <p><strong>جواب اشتباه:</strong> «∅ — چون هیچ زیرمجموعه‌ای ندارد»</p>
+  <p><strong>جواب درست:</strong> <span class="hl-t">P(∅) = {∅}</span> — ∅ یک زیرمجموعه دارد: خودش. پس مجموعه توانی‌اش شامل همان یک عضو است.</p>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ PART 10 -->
+<section id="s10">
+<div class="sh"><div class="snum">۱۰</div><h2>استراتژی خواندن بصری</h2></div>
+
+<p>متخصصان ریاضی وقتی با یک عبارت پیچیده روبرو می‌شوند، چشمانشان این مسیر را طی می‌کند:</p>
+
+<div class="scan-step">
+  <span class="seye">👁️</span>
+  <div class="sc-cont">
+    <h4>اول: آکولادهای متناظر را پیدا کن</h4>
+    <p>با یک نگاه، تعداد <span class="mi">{</span> و <span class="mi">}</span> را بشمار. باید برابر باشند. بزرگ‌ترین جفت را مشخص کن.</p>
+  </div>
+</div>
+
+<div class="scan-step">
+  <span class="seye">🔍</span>
+  <div class="sc-cont">
+    <h4>دوم: عمق صفر را رنگ‌بزن</h4>
+    <p>از داخل بیرونی‌ترین آکولاد، کاماهایی که در عمق صفر هستند را پیدا کن. این کاماها اعضا را از هم جدا می‌کنند.</p>
+  </div>
+</div>
+
+<div class="scan-step">
+  <span class="seye">📦</span>
+  <div class="sc-cont">
+    <h4>سوم: هر بلوک { } را یک جعبه بدان</h4>
+    <p>هر <span class="mi">{...}</span> که مستقیماً عضو است را مثل یک شیء واحد ببین. به داخلش نرو مگر اینکه سوال از تو بخواهد.</p>
+  </div>
+</div>
+
+<div class="scan-step">
+  <span class="seye">🎯</span>
+  <div class="sc-cont">
+    <h4>چهارم: هدف را با لیست اعضا مقایسه کن</h4>
+    <p>آیا هدفت (عدد، مجموعه، ...) دقیقاً با یکی از اعضای مستقیم تطابق دارد؟ «دقیقاً» — نه بیشتر، نه کمتر.</p>
+  </div>
+</div>
+
+<div class="scan-step">
+  <span class="seye">✅</span>
+  <div class="sc-cont">
+    <h4>پنجم: نتیجه بگیر و توجیه کن</h4>
+    <p>جواب را با ذکر دلیل بنویس. «بله، چون ... مستقیماً عضو است» یا «خیر، چون ... در لیست اعضا نیست».</p>
+  </div>
+</div>
+
+<div class="card yellow">
+  <h3>🔬 مثال زنده: خواندن {1, {2,3}, {{4,5}}, ∅}</h3>
+  <div class="mbox" style="font-size:.95rem">{ 1 , {2,3} , {{4,5}} , ∅ }</div>
+  <p>↓ کاماهای عمق صفر را پیدا می‌کنیم:</p>
+  <p style="direction:ltr;font-family:monospace;background:#111;color:#e2e8f0;padding:12px;border-radius:8px;font-size:.85rem">
+    { <span style="color:#fb923c">1</span> , <span style="color:#4ade80">{2,3}</span> , <span style="color:#a78bfa">{{4,5}}</span> , <span style="color:#60a5fa">∅</span> }
+  </p>
+  <p>چهار عضو: <span class="mi">1</span>، <span class="mi">{2,3}</span>، <span class="mi">{{4,5}}</span>، <span class="mi">∅</span></p>
+  <ul class="bullets">
+    <li>۴ ∈ این مجموعه؟ <span class="hl-f">خیر</span> (داخل دو لایه است)</li>
+    <li>{4,5} ∈ این مجموعه؟ <span class="hl-f">خیر</span> ({{4,5}} هست، نه {4,5})</li>
+    <li>{{4,5}} ∈ این مجموعه؟ <span class="hl-t">بله</span> (مستقیماً عضو است)</li>
+  </ul>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ PART 11 -->
+<section id="s11">
+<div class="sh"><div class="snum">۱۱</div><h2>آزمون تعاملی — هوشمند با بازخورد فوری</h2></div>
+
+<div class="prog"><div class="progf" id="qprog" style="width:0%"></div></div>
+<div id="quiz-area"></div>
+<div class="qscore" id="qscore"></div>
+<div style="text-align:center;margin-top:16px">
+  <button class="btn btn-g" id="qnext" onclick="nextQuestion()" style="display:none">سوال بعدی ←</button>
+  <button class="btn btn-p" id="qrestart" onclick="restartQuiz()" style="display:none">شروع دوباره 🔄</button>
+</div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════ PART 12 -->
+<section id="s12">
+<div class="sh"><div class="snum">۱۲</div><h2>برگه کمکی — مرجع سریع</h2></div>
+
+<div class="cgrid">
+<div class="ccard">
+  <h4>📌 نمادها یک‌نگاهی</h4>
+  <div class="mbox" style="font-size:.78rem;text-align:right;direction:rtl;line-height:2.2">
+∈ = عضو است<br>
+∉ = عضو نیست<br>
+⊆ = زیرمجموعه است<br>
+⊂ = زیرمجموعه سره<br>
+⊄ = زیرمجموعه نیست<br>
+∅ = مجموعه خالی<br>
+P(A) = مجموعه توانی
+  </div>
+</div>
+<div class="ccard">
+  <h4>⚡ قوانین فوری</h4>
+  <ul class="bullets">
+    <li>∅ ⊆ هر مجموعه‌ای</li>
+    <li>A ⊆ A (ولی A ⊄ A)</li>
+    <li>|P(A)| = 2^|A|</li>
+    <li>ترتیب مهم نیست</li>
+    <li>تکرار مهم نیست</li>
+  </ul>
+</div>
+<div class="ccard">
+  <h4>🚨 ۱۰ اشتباه رایج</h4>
+  <ul class="bullets">
+    <li>{1} و 1 یکی نیستند</li>
+    <li>∅ و {∅} یکی نیستند</li>
+    <li>∈ و ⊆ جابجا می‌شوند</li>
+    <li>ترتیب عناصر مهم نیست</li>
+    <li>تکرار عناصر مهم نیست</li>
+    <li>{1,2} ≠ {{1},{2}}</li>
+    <li>A ⊆ A همیشه درست است</li>
+    <li>A ⊂ A هرگز درست نیست</li>
+    <li>P(∅)={∅}, نه ∅</li>
+    <li>اعداد ⊆ ندارند</li>
+  </ul>
+</div>
+<div class="ccard">
+  <h4>🧩 درخت تصمیم</h4>
+  <div class="dtree" style="font-size:.75rem">
+<span class="dtq">هدف چیست؟</span>
+├─ <span class="dty">بررسی ∈</span>
+│   ├─ اعضای مستقیم را فهرست کن
+│   └─ آیا هدف در لیست هست؟
+│       ├─ <span class="dta">بله: ∈ درست</span>
+│       └─ <span class="dta">خیر: ∉ درست</span>
+└─ <span class="dty">بررسی ⊆</span>
+    ├─ هر عضو A را چک کن
+    ├─ <span class="dta">همه در B: A⊆B</span>
+    └─ یکی نبود: <span class="dta">A⊄B</span>
+  </div>
+</div>
+</div>
+
+<div class="rule">
+  <h3>🏆 الگوریتم جهانی نهایی</h3>
+  <p>برای هر سوال عضویت/زیرمجموعه:</p>
+  <ol class="algo">
+    <li>آکولادهای بیرونی مجموعه هدف را پیدا کن</li>
+    <li>اعضای مستقیم را با شمارش کاماهای عمق‌صفر فهرست کن</li>
+    <li>اگر سوال ∈ است: مقایسه مستقیم انجام بده</li>
+    <li>اگر سوال ⊆ است: هر عضو A را در B جستجو کن</li>
+    <li>جواب را با توجیه بنویس</li>
+  </ol>
+</div>
+
+</section>
+
+</main>
+
+<button class="stop" id="stoptbtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ═══════════════ NAV SETUP ═══════════════
+const sections=[
+  {id:'s1',label:'۱ مدل ذهنی'},{id:'s2',label:'۲ عضو vs زیرمجموعه'},
+  {id:'s3',label:'۳ الگوریتم'},{id:'s4',label:'۴ تودرتو'},
+  {id:'s5',label:'۵ مفاهیم'},{id:'s6',label:'۶ نمادها'},
+  {id:'s7',label:'۷ گیج‌کننده‌ها'},{id:'s8',label:'۸ تمرین'},
+  {id:'s9',label:'۹ تله‌ها'},{id:'s10',label:'۱۰ استراتژی'},
+  {id:'s11',label:'۱۱ آزمون'},{id:'s12',label:'۱۲ برگه کمکی'}
+];
+const ni=document.getElementById('navinner');
+sections.forEach(s=>{
+  const b=document.createElement('button');
+  b.className='nbtn';b.textContent=s.label;
+  b.onclick=()=>document.getElementById(s.id).scrollIntoView({behavior:'smooth'});
+  ni.appendChild(b);
+});
+
+// Active nav on scroll
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const idx=sections.findIndex(s=>s.id===e.target.id);
+      document.querySelectorAll('.nbtn').forEach((b,i)=>b.classList.toggle('act',i===idx));
+    }
+  });
+},{threshold:.3});
+sections.forEach(s=>{const el=document.getElementById(s.id);if(el)observer.observe(el);});
+
+// Scroll top
+window.addEventListener('scroll',()=>{
+  document.getElementById('stoptbtn').classList.toggle('show',window.scrollY>300);
+});
+
+// ═══════════════ SET PARSER ═══════════════
+function parseSet(input){
+  input=input.trim();
+  if(input==='∅'||input==='{}')return{type:'set',elems:[]};
+  if(!input.startsWith('{'))return{type:'atom',val:isNaN(input)?input:Number(input)};
+  if(!input.endsWith('}'))return null;
+  const inner=input.slice(1,-1).trim();
+  if(!inner)return{type:'set',elems:[]};
+  const elems=[];
+  let depth=0,cur='';
+  for(const c of inner){
+    if(c==='{')depth++,cur+=c;
+    else if(c==='}')depth--,cur+=c;
+    else if(c===','&&depth===0){const t=cur.trim();if(t)elems.push(parseSet(t));cur='';}
+    else cur+=c;
+  }
+  const last=cur.trim();if(last)elems.push(parseSet(last));
+  return{type:'set',elems};
+}
+
+function setEqual(a,b){
+  if(!a||!b)return false;
+  if(a.type!==b.type)return false;
+  if(a.type==='atom')return a.val===b.val;
+  if(a.elems.length!==b.elems.length)return false;
+  return a.elems.every(ae=>b.elems.some(be=>setEqual(ae,be)));
+}
+
+function isMember(elem,setObj){
+  if(!setObj||setObj.type!=='set')return false;
+  return setObj.elems.some(e=>setEqual(e,elem));
+}
+
+function isSubset(a,b){
+  if(!a||!b)return false;
+  if(a.type!=='set')return false;
+  return a.elems.every(ae=>isMember(ae,b));
+}
+
+function setStr(s){
+  if(!s)return'?';
+  if(s.type==='atom')return String(s.val);
+  if(s.elems.length===0)return'∅';
+  return'{'+s.elems.map(setStr).join(', ')+'}';
+}
+
+function checkMembership(){
+  const setIn=document.getElementById('mem-set').value;
+  const elemIn=document.getElementById('mem-elem').value;
+  const res=document.getElementById('mem-result');
+  const S=parseSet(setIn),E=parseSet(elemIn);
+  if(!S||S.type!=='set'){res.textContent='⚠️ مجموعه معتبر نیست';return;}
+  if(!E){res.textContent='⚠️ عضو معتبر نیست';return;}
+  const members=S.elems.map(setStr).join(' ، ');
+  const ok=isMember(E,S);
+  res.textContent=`مجموعه: ${setStr(S)}\nاعضای مستقیم: ${members||'(خالی)'}\nعضو مورد بررسی: ${setStr(E)}\n\nنتیجه: ${setStr(E)} ${ok?'∈':'∉'} ${setStr(S)}\n${ok?'✅ بله، عضو است.':'❌ خیر، عضو نیست.'}`;
+  res.style.color=ok?'#10B981':'#EF4444';
+}
+
+function checkSubset(){
+  const setIn=document.getElementById('mem-set').value;
+  const elemIn=document.getElementById('mem-elem').value;
+  const res=document.getElementById('mem-result');
+  const B=parseSet(setIn),A=parseSet(elemIn);
+  if(!B||B.type!=='set'){res.textContent='⚠️ مجموعه B معتبر نیست';return;}
+  if(!A||A.type!=='set'){res.textContent='⚠️ برای بررسی ⊆، باید A هم مجموعه باشد';res.style.color='#F59E0B';return;}
+  const ok=isSubset(A,B);
+  const missing=A.elems.filter(ae=>!isMember(ae,B)).map(setStr);
+  res.textContent=`A = ${setStr(A)}\nB = ${setStr(B)}\n\nنتیجه: ${setStr(A)} ${ok?'⊆':'⊄'} ${setStr(B)}\n${ok?'✅ بله، زیرمجموعه است.':'❌ خیر. اعضای A که در B نیستند: '+missing.join(', ')}`;
+  res.style.color=ok?'#10B981':'#EF4444';
+}
+
+// ═══════════════ POWER SET ═══════════════
+function generatePowerSet(){
+  const inp=document.getElementById('ps-input').value.trim();
+  const res=document.getElementById('ps-result');
+  const grid=document.getElementById('ps-grid');
+  const parts=inp.split(',').map(s=>s.trim()).filter(Boolean);
+  if(parts.length>4){res.textContent='⚠️ برای نمایش بهتر، حداکثر ۴ عضو وارد کن';res.style.color='#F59E0B';return;}
+  const n=parts.length;
+  const subsets=[];
+  for(let i=0;i<(1<<n);i++){
+    const sub=[];
+    for(let j=0;j<n;j++)if(i&(1<<j))sub.push(parts[j]);
+    subsets.push(sub);
+  }
+  res.textContent=`A = {${parts.join(', ')}}\n|A| = ${n}  →  |P(A)| = 2^${n} = ${Math.pow(2,n)}\n\nP(A) = { ${subsets.map(s=>s.length?'{'+s.join(',')+'}':'∅').join(', ')} }`;
+  res.style.color='#10B981';
+  grid.innerHTML='';
+  subsets.forEach(s=>{
+    const el=document.createElement('span');
+    el.className='psitem';
+    el.textContent=s.length?'{'+s.join(',')+'}':'∅';
+    grid.appendChild(el);
+  });
+}
+
+// ═══════════════ QUIZ ═══════════════
+const quizData=[
+  {q:'آیا عبارت زیر درست است؟\n۲ ∈ {۱, ۲, ۳}',
+   opts:['بله، ۲ مستقیماً عضو است','خیر، ۲ در آن مجموعه نیست','بستگی دارد','نمی‌توان گفت'],
+   ans:0,exp:'۲ مستقیماً در لیست اعضا قرار دارد پس عضو است. این ساده‌ترین نوع عضویت است.'},
+  {q:'آیا {۱} ∈ {۱, ۲, ۳} درست است؟',
+   opts:['بله','خیر — {۱} مجموعه است، ولی داخل {۱,۲,۳} فقط عدد ۱ هست','بله چون ۱ عضو است','هر دو جواب ممکن است'],
+   ans:1,exp:'دقت کن: {۱,۲,۳} اعضایش اعداد هستند (۱، ۲، ۳). ولی {۱} یک مجموعه است. هیچ مجموعه‌ای در آن سه عدد نیست!'},
+  {q:'آیا {۱} ⊆ {۱, ۲, ۳} درست است؟',
+   opts:['خیر','بله — عضو {۱} که همان ۱ است داخل {۱,۲,۳} هست','فقط اگر ۲ هم باشد','نمی‌توان گفت'],
+   ans:1,exp:'برای بررسی {۱} ⊆ {۱,۲,۳}: هر عضو {۱} را نگاه می‌کنیم. تنها عضو {۱} همان ۱ است. آیا ۱ ∈ {۱,۲,۳}? بله! پس {۱} ⊆ {۱,۲,۳}.'},
+  {q:'∅ (مجموعه خالی) زیرمجموعه چه مجموعه‌هایی است؟',
+   opts:['هیچ مجموعه‌ای','فقط خودش','هر مجموعه‌ای بدون استثنا','فقط مجموعه‌های خالی'],
+   ans:2,exp:'∅ ⊆ هر مجموعه‌ای. چرا؟ برای اثبات A ⊆ B باید ثابت کنیم هر عضو A در B هم هست. ∅ هیچ عضوی ندارد، پس هیچ ادعایی نداری که رد شود!'},
+  {q:'چند عضو مستقیم دارد: {{۱}, ۲, {۳,۴}}؟',
+   opts:['۴ عضو (۱، ۲، ۳، ۴)','۳ عضو ({۱}، ۲، {۳,۴})','۲ عضو','۵ عضو'],
+   ans:1,exp:'اعضای مستقیم: {۱} (یک جعبه)، ۲ (عدد)، {۳,۴} (یک جعبه). سه تا! ۱ و ۳ و ۴ داخل جعبه‌های دیگر هستند.'},
+  {q:'آیا ∅ ∈ {∅} درست است؟',
+   opts:['خیر، مجموعه خالی عضو هیچ چیزی نمی‌شود','بله، ∅ مستقیماً داخل {∅} است','نمی‌توان گفت','بستگی دارد'],
+   ans:1,exp:'{∅} یک مجموعه است که دقیقاً یک عضو دارد: خودِ مجموعه خالی. پس ∅ ∈ {∅} کاملاً درست است!'},
+  {q:'کدام گزینه درست است؟\nالف) {۱,۲} = {۲,۱}   ب) {۱,۱,۲} = {۱,۲}',
+   opts:['فقط الف','فقط ب','هر دو درستند','هیچ‌کدام'],
+   ans:2,exp:'در مجموعه‌ها: (الف) ترتیب مهم نیست → {۱,۲}={۲,۱} ✓  (ب) تکرار مهم نیست → {۱,۱,۲}={۱,۲} ✓'},
+  {q:'|P({a,b,c})| (تعداد اعضای مجموعه توانی) چقدر است؟',
+   opts:['۳','۶','۸','۱۶'],
+   ans:2,exp:'اگر |A|=n باشد، |P(A)|=2ⁿ. اینجا |{a,b,c}|=3، پس |P(A)|=2³=8.'},
+  {q:'آیا ۱ ∈ {{۱}} درست است؟',
+   opts:['بله، چون ۱ داخل آن است','خیر — {۱} عضو {{۱}} است، نه ۱','هر دو','فقط با ⊆ می‌توان چک کرد'],
+   ans:1,exp:'{{۱}} یک عضو مستقیم دارد: {۱}. عدد ۱ یک لایه عمیق‌تر است. برای رسیدن به ۱ باید دو لایه آکولاد را باز کنی.'},
+  {q:'آیا A ⊂ A (زیرمجموعه سره) همیشه درست است؟',
+   opts:['بله','خیر — A با خودش برابر است پس ⊂ برقرار نیست','فقط اگر A خالی باشد','بستگی دارد'],
+   ans:1,exp:'⊂ (سره) یعنی A⊆B و A≠B. اما A=A همیشه درست است. پس A⊂A هرگز درست نیست! ولی A⊆A همیشه درست است.'},
+  {q:'P(∅) (مجموعه توانی مجموعه خالی) چیست؟',
+   opts:['∅','{{}}','یا {∅}','هیچ مجموعه‌ای وجود ندارد'],
+   ans:2,exp:'P(∅) شامل تمام زیرمجموعه‌های ∅ است. ∅ فقط یک زیرمجموعه دارد: خودش (∅). پس P(∅)={∅}. توجه: این خالی نیست، یک عضو دارد!'},
+  {q:'آیا {{۱,۲}} = {۱,۲} است؟',
+   opts:['بله','خیر — {{۱,۲}} یک عضو دارد ({۱,۲})، ولی {۱,۲} دو عضو دارد (۱ و ۲)','گاهی بله','بستگی به تعریف دارد'],
+   ans:1,exp:'{{۱,۲}}: یک عضو مستقیم ({۱,۲}). {۱,۲}: دو عضو مستقیم (۱ و ۲). اینها کاملاً متفاوتند!'},
+  {q:'در مجموعه A = {۱, {۲,۳}, ∅}، کدام درست است؟',
+   opts:['{۲,۳} ∈ A','۲ ∈ A','∅ ∉ A','۳ ∈ A'],
+   ans:0,exp:'{۲,۳} مستقیماً عضو A است ✓. ۲ داخل {۲,۳} است نه مستقیماً در A. ∅ مستقیماً عضو A است. ۳ هم داخل {۲,۳} است.'},
+  {q:'اگر A={۱,۲} و B={۱,۲,{۱,۲}}، کدام درست است؟',
+   opts:['A ∈ B','A ⊆ B','A ∈ B و A ⊆ B هر دو','هیچ‌کدام'],
+   ans:2,exp:'A ∈ B: آیا {۱,۲} مستقیماً عضو B است؟ بله! B سه عضو دارد: ۱، ۲، {۱,۲}. A ⊆ B: هر عضو A (۱ و ۲) در B هست؟ بله! پس هر دو درستند.'},
+  {q:'چند زیرمجموعه سره دارد {a,b}؟',
+   opts:['۲','۳','۴','۱'],
+   ans:1,exp:'P({a,b})={∅,{a},{b},{a,b}}. از این ۴ تا، کدام‌ها زیرمجموعه سره هستند (نه برابر {a,b})؟ ∅، {a}، {b} — یعنی ۳ تا.'},
+];
+
+let qIdx=0,score=0,answered=false;
+
+function renderQuestion(){
+  const qa=document.getElementById('quiz-area');
+  const nxt=document.getElementById('qnext');
+  const rst=document.getElementById('qrestart');
+  if(qIdx>=quizData.length){
+    qa.innerHTML=`<div class="qcard"><div class="qtext" style="font-size:1.2rem;text-align:center">🎉 آزمون تمام شد!</div><p style="text-align:center;font-size:1.1rem;margin-top:10px">نمره: <strong>${score}/${quizData.length}</strong></p></div>`;
+    document.getElementById('qscore').style.display='block';
+    document.getElementById('qscore').textContent=`نمره نهایی: ${score} از ${quizData.length} (${Math.round(score/quizData.length*100)}%)`;
+    nxt.style.display='none';
+    rst.style.display='inline-block';
+    return;
+  }
+  const d=quizData[qIdx];
+  answered=false;
+  document.getElementById('qprog').style.width=`${(qIdx/quizData.length)*100}%`;
+  qa.innerHTML=`
+  <div class="qcard">
+    <div style="font-size:.78rem;color:#64748B;margin-bottom:8px">سوال ${qIdx+1} از ${quizData.length}</div>
+    <div class="qtext" style="white-space:pre-line">${d.q}</div>
+    <div class="qopts" id="qopts">
+      ${d.opts.map((o,i)=>`<button class="qopt" onclick="answerQ(${i})" id="qo${i}">${o}</button>`).join('')}
+    </div>
+    <div class="qexp" id="qexp">💡 ${d.exp}</div>
+  </div>`;
+  nxt.style.display='none';
+}
+
+function answerQ(i){
+  if(answered)return;
+  answered=true;
+  const d=quizData[qIdx];
+  document.querySelectorAll('.qopt').forEach(b=>b.disabled=true);
+  document.getElementById(`qo${i}`).classList.add(i===d.ans?'ok':'no');
+  if(i===d.ans){score++;document.getElementById(`qo${d.ans}`).classList.add('ok');}
+  else{document.getElementById(`qo${d.ans}`).classList.add('ok');}
+  document.getElementById('qexp').classList.add('show');
+  document.getElementById('qnext').style.display='inline-block';
+}
+
+function nextQuestion(){
+  qIdx++;
+  renderQuestion();
+}
+
+function restartQuiz(){
+  qIdx=0;score=0;
+  document.getElementById('qscore').style.display='none';
+  document.getElementById('qrestart').style.display='none';
+  document.getElementById('qprog').style.width='0%';
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
+
+</body></html>
