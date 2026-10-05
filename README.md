@@ -1,4 +1,4 @@
-# 🧮 Set Theory — Zero to Olympiad
+# 🧮 Set Theory
 
 <div align="center">
 
